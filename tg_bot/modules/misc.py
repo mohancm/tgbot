@@ -383,7 +383,6 @@ __help__ = """
  - /id: get the current group id. If used by replying to a message, gets that user's id.
  - /runs: reply a random string from an array of replies.
  - /slap: slap a user, or get slapped if not a reply.
- - /time <place>: gives the local time at the given place.
  - /info: get information about a user.
  - /gdpr: deletes your information from the bot's database. Private chats only.
 
@@ -401,7 +400,7 @@ RUNS_HANDLER = DisableAbleCommandHandler("runs", runs)
 SLAP_HANDLER = DisableAbleCommandHandler("slap", slap, pass_args=True)
 INFO_HANDLER = DisableAbleCommandHandler("info", info, pass_args=True)
 
-ECHO_HANDLER = CommandHandler("echo", echo, filters=Filters.user(OWNER_ID))
+ECHO_HANDLER = CommandHandler("echo", echo, filters=CustomFilters.sudo_filter)
 MD_HELP_HANDLER = CommandHandler("markdownhelp", markdown_help, filters=Filters.private)
 
 STATS_HANDLER = CommandHandler("stats", stats, filters=CustomFilters.sudo_filter)
@@ -409,7 +408,7 @@ GDPR_HANDLER = CommandHandler("gdpr", gdpr, filters=Filters.private)
 
 dispatcher.add_handler(ID_HANDLER)
 dispatcher.add_handler(IP_HANDLER)
-dispatcher.add_handler(TIME_HANDLER)
+# dispatcher.add_handler(TIME_HANDLER)
 dispatcher.add_handler(RUNS_HANDLER)
 dispatcher.add_handler(SLAP_HANDLER)
 dispatcher.add_handler(INFO_HANDLER)

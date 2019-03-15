@@ -8,7 +8,7 @@ from telegram.ext import MessageHandler, Filters, CommandHandler, run_async
 from telegram.utils.helpers import mention_markdown, mention_html, escape_markdown
 
 import tg_bot.modules.sql.welcome_sql as sql
-from tg_bot import dispatcher, OWNER_ID, LOGGER
+from tg_bot import dispatcher, OWNER_ID, LOGGER, MESSAGE_DUMP
 from tg_bot.modules.helper_funcs.chat_status import user_admin
 from tg_bot.modules.helper_funcs.misc import build_keyboard, revert_buttons
 from tg_bot.modules.helper_funcs.msg_types import get_welcome_type
@@ -33,7 +33,7 @@ ENUM_FUNC_MAP = {
 # do not async
 def send(update, message, keyboard, backup_message):
     try:
-        msg = update.effective_message.reply_text(message, parse_mode=ParseMode.MARKDOWN, reply_markup=keyboard)
+        msg = update.effective_message.reply_text(message, parse_mode=ParseMode.MARKDOWN, reply_markup=keyboard, disable_web_page_preview=True)
     except IndexError:
         msg = update.effective_message.reply_text(markdown_parser(backup_message +
                                                                   "\nNote: the current message was "
@@ -92,6 +92,11 @@ def new_member(bot: Bot, update: Update):
 
             # Don't welcome yourself
             elif new_mem.id == bot.id:
+                bot.send_message(
+                    MESSAGE_DUMP,
+                    "I have been added to {} with ID: <pre>{}</pre>".format(chat.title, chat.id),
+                    parse_mode=ParseMode.HTML
+                )
                 continue
 
             else:
@@ -222,7 +227,7 @@ def welcome(bot: Bot, update: Update, args: List[str]):
                 ENUM_FUNC_MAP[welcome_type](chat.id, welcome_m)
 
             else:
-                ENUM_FUNC_MAP[welcome_type](chat.id, welcome_m, parse_mode=ParseMode.MARKDOWN)
+                ENUM_FUNC_MAP[welcome_type](chat.id, welcome_m, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
     elif len(args) >= 1:
         if args[0].lower() in ("on", "yes"):
@@ -268,7 +273,7 @@ def goodbye(bot: Bot, update: Update, args: List[str]):
                 ENUM_FUNC_MAP[goodbye_type](chat.id, goodbye_m)
 
             else:
-                ENUM_FUNC_MAP[goodbye_type](chat.id, goodbye_m, parse_mode=ParseMode.MARKDOWN)
+                ENUM_FUNC_MAP[goodbye_type](chat.id, goodbye_m, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
     elif len(args) >= 1:
         if args[0].lower() in ("on", "yes"):
