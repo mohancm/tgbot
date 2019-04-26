@@ -9,8 +9,8 @@ feedparser
 bs4
 lxml
 demjson
-PyLyrics
 wget
 gTTS
 telegram
 zalgo_text
+hurry.filesize
